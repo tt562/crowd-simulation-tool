@@ -13,7 +13,8 @@ public class GroupLeader : MonoBehaviour
 
         NPCGroup group = this.gameObject.transform.parent.GetComponent<NPCGroup>();
 
-        
+
+        // If the group approaches another group coming the other way, move into single file
 
         bool facingSameDirection = true;
 
@@ -33,6 +34,8 @@ public class GroupLeader : MonoBehaviour
 
     private void OnTriggerExit(Collider other)
     {
+        // Once a group passes another group after having to move into single-file, move back to their original formation
+
         if (other.name == "GroupArea" && other.gameObject.transform.parent.parent != this.gameObject.transform.parent)
         {
 
@@ -41,6 +44,7 @@ public class GroupLeader : MonoBehaviour
         }
     }
 
+    // Check if a group is approaching from the opposite direction or going in the same direction
     private bool FacingSameDirection(GameObject otherPerson)
     {
        
@@ -48,10 +52,6 @@ public class GroupLeader : MonoBehaviour
         float rotation = this.gameObject.transform.rotation.eulerAngles.y;
         float otherRotation = otherPerson.transform.parent.rotation.eulerAngles.y;
 
-        //Debug.Log(this.transform.parent.name);
-
-        //Debug.Log("Rotation" + rotation);
-        //Debug.Log("Other Rotation" + otherRotation);
 
         float diff = Mathf.DeltaAngle(rotation, otherRotation);
 
@@ -60,40 +60,14 @@ public class GroupLeader : MonoBehaviour
             diff *= -1;
         }
 
-        //Debug.Log("Difference" + diff);
-
         if(diff <= 90)
         {
-            //Debug.Log("Same Way");
             return true;
         }
         else
         {
-            //Debug.Log("Opposite Way");
             return false;
         }
     }
 
-    /*private void Update()
-    {
-        Collider centreCollider = this.GetComponentInChildren<BoxCollider>();
-        Vector3 currentPosition = this.gameObject.transform.position;
-
-        Vector3 nearestPointToCentre = centreCollider.ClosestPoint(currentPosition);
-
-        float distance = Vector3.Distance(currentPosition, nearestPointToCentre);
-
-        GameObject originalDestination = this.GetComponent<NPCAI>().destination_point;
-
-        if (distance > 2.5f)
-        {
-            GameObject centre = GameObject.CreatePrimitive(PrimitiveType.Cube);
-            centre.transform.position = nearestPointToCentre;
-            this.GetComponent<NPCAI>().destination_point = centre;
-        }
-        else
-        {
-            this.GetComponent<NPCAI>().destination_point = originalDestination;
-        }
-    }*/
 }

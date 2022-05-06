@@ -10,16 +10,10 @@ public class GroupSpawner : MonoBehaviour
 
     public GameObject presetGroup;
 
-    //public int noGroups;
-
     
     public int[] groupDistribution;
 
     public int[] originalDistribution;
-
-    //public float walkRadius;
-
-    //public GameObject spawnPoint;
 
     private Transform spawnArea;
 
@@ -33,8 +27,6 @@ public class GroupSpawner : MonoBehaviour
 
         for (int groupSize = 0; groupSize < groupDistribution.Length; groupSize++)
         {
-            //Debug.Log(originalDistribution[groupSize]);
-            //Debug.Log(groupDistribution[groupSize]);
 
             for (int i = 0; i < groupDistribution[groupSize]; i++)
             {
@@ -54,38 +46,7 @@ public class GroupSpawner : MonoBehaviour
 
     }
 
-   
-
-   /* private void OnValidate()
-    {
-        for (int groupSize = 0; groupSize < groupDistribution.Length; groupSize++)
-        {
-            Debug.Log(originalDistribution[groupSize]);
-            Debug.Log(groupDistribution[groupSize]);
-
-            if (originalDistribution[groupSize] < groupDistribution[groupSize])
-            {
-                int extraGroups = groupDistribution[groupSize] - originalDistribution[groupSize];
-
-                for (int j = 0; j < extraGroups; j++)
-                {
-                    SpawnGroup(groupSize + 1);
-                }
-            }
-            if (originalDistribution[groupSize] > groupDistribution[groupSize])
-            {
-                int surplusGroups = originalDistribution[groupSize] - groupDistribution[groupSize];
-
-                
-
-                for (int j = 0; j < surplusGroups; j++)
-                {
-                    DespawnRandomGroup(groupSize + 1);
-                }
-            }
-        }
-    }*/
-
+  
     public GameObject SpawnGroup(int groupSize)
     {
         GameObject cube = GameObject.CreatePrimitive(PrimitiveType.Cube);
@@ -122,6 +83,7 @@ public class GroupSpawner : MonoBehaviour
     }
 
 
+    // Get random location in the spawn area
     Vector3 GetRandomLocation()
     {
         int noAreas = this.transform.childCount;

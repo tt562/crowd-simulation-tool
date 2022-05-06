@@ -28,33 +28,5 @@ public class IntParameterRandomSetter : StateMachineBehaviour
         animator.SetInteger("IdleIndex", randomInt);
     }
 
-    /*public override void OnStateUpdate(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
-    {
-        *//*if (randomInt >= stateCount)
-        {
-            valueIncreasing = false;
-        }
-        if(randomInt <= 1)
-        {
-            valueIncreasing = true;
-        }
-
-        if (valueIncreasing)
-        {
-            increment = 0.001f;
-        }
-
-        if(!valueIncreasing)
-        {
-            increment = -0.001f;
-        }
-
-        randomInt += increment;
-
-        
-
-        animator.SetFloat("IdleIndex", randomInt);*//*
-    }*/
-
 
 }

@@ -15,9 +15,6 @@ public class NPCGroup : MonoBehaviour
     public enum groupState { Inside, Outside, Stationary};
 
 
-
-    //public GameObject[] potFormationPositions;
-
     public GameObject[] formationPositions;
 
     public GameObject groupLeader;
@@ -61,9 +58,6 @@ public class NPCGroup : MonoBehaviour
     {
 
         this.otherMembers[0] = getRandomCharacter().GetComponent<NavMeshAgent>();
-
-        //randomiseClothing(groupLeader.gameObject);
-
         
 
         removeExcessMembers(this.transform);
@@ -78,6 +72,8 @@ public class NPCGroup : MonoBehaviour
 
         state = groupState.Outside;
 
+        // Pick a random destination point for the group
+
         destination = getRandomDestination();
 
         originalShape = shape;
@@ -88,6 +84,8 @@ public class NPCGroup : MonoBehaviour
             fp.SetActive(true);
         }
 
+
+        // Set the formation shape of the group
 
 
         if (shape == formationShape.SingleFile)
@@ -110,19 +108,8 @@ public class NPCGroup : MonoBehaviour
         if (groupSize==1 && this.gameObject.name != "NPCGroup1")
         {
 
-            //removeExcessMembers(0);
-
             otherMembers[0].gameObject.SetActive(false);
 
-            /*otherMembers[1].gameObject.SetActive(false);
-            otherMembers[2].gameObject.SetActive(false);
-            otherMembers[1] = null;
-            otherMembers[2] = null;*/
-
-            
-
-
-            //Debug.Log(this.name + groupLeader.transform.localPosition);
 
             removeExcessFormationPoints();
 
@@ -131,12 +118,6 @@ public class NPCGroup : MonoBehaviour
         // NPC with one other person
         if (groupSize==2)
         {
-            //removeExcessMembers(1);
-
-            /*otherMembers[1].gameObject.SetActive(false);
-            otherMembers[2].gameObject.SetActive(false);
-            otherMembers[1] = null;
-            otherMembers[2] = null;*/
 
             this.otherMembers[0].gameObject.SetActive(true);
             this.otherMembers[0].GetComponent<NPCAI>().otherMemberIndex = 0;
@@ -149,10 +130,6 @@ public class NPCGroup : MonoBehaviour
         // NPC with two people
         if (groupSize == 3)
         {
-            //removeExcessMembers(2);
-
-            /* otherMembers[2].gameObject.SetActive(false);
-             otherMembers[2] = null;*/
 
             this.otherMembers[0].gameObject.SetActive(true);
 
@@ -169,17 +146,9 @@ public class NPCGroup : MonoBehaviour
 
         }
 
-        
+        // NPC with three people
         if(groupSize == 4)
         {
-
-
-            //removeExcessMembers(3);
-
-            /*otherMembers[1].gameObject.SetActive(false);
-            otherMembers[2].gameObject.SetActive(false);
-            otherMembers[1] = null;
-            otherMembers[2] = null;*/
 
             this.otherMembers[0].gameObject.SetActive(true);
 
@@ -192,16 +161,13 @@ public class NPCGroup : MonoBehaviour
 
             this.otherMembers[0].GetComponent<NPCAI>().otherMemberIndex = 0;
             this.otherMembers[1].GetComponent<NPCAI>().otherMemberIndex = 1;
-            this.otherMembers[2].GetComponent<NPCAI>().otherMemberIndex = 2;
-
-
-            
+            this.otherMembers[2].GetComponent<NPCAI>().otherMemberIndex = 2;      
 
         }
 
 
         
-
+        // Set the allocated formation point for each member of the group
         if (groupSize > 1)
         {
 
@@ -213,17 +179,10 @@ public class NPCGroup : MonoBehaviour
                     randomiseClothing(go.gameObject);
 
                     go.gameObject.GetComponent<NPCAI>().closestFreeFormationPoint = this.formationPositions[go.gameObject.GetComponent<NPCAI>().otherMemberIndex];
-                    //Debug.Log(this.name + go.name + go.gameObject.GetComponent<NPCAI>().closestFreeFormationPoint);
+                  
                 }
             }
         }
-
-        
-
-
-        //Debug.Log("GROUP SIZE: " + groupSize);
-
-        
         
 
     }
@@ -243,7 +202,7 @@ public class NPCGroup : MonoBehaviour
             foreach (NavMeshAgent go in otherMembers)
             {
                 go.GetComponent<NPCAI>().destination_point = go.GetComponent<NPCAI>().closestFreeFormationPoint;
-                //Debug.Log(go.gameObject.name + go.GetComponent<NPCAI>().closestFreeFormationPoint.name);
+
                 go.speed = 3.4f;
             }
         }
@@ -298,16 +257,9 @@ public class NPCGroup : MonoBehaviour
         {
             GameObject stationaryCategory = pickRandomArrayElement(stationaryDestinations);
 
-            //Debug.Log(stationaryCategory.name);
 
             destination = pickRandomChild(stationaryCategory);
 
-            /*while(destination.gameObject.tag != "Destination") 
-            {
-                destination = pickRandomChild(stationaryCategory);
-            }*/
-
-            //Debug.Log("Destination: " + destination.gameObject.name);
             if (destination != null)
             {
                 destination.GetComponent<StationaryArea>().areaTargeted = true;
@@ -315,13 +267,7 @@ public class NPCGroup : MonoBehaviour
             }
         }
 
-        //Debug.Log(destType);
-        //Debug.Log(destination.name);
 
-        /*if(destination == null)
-        {
-            getRandomDestination();
-        }*/
 
         return destination;
     }
@@ -384,15 +330,9 @@ public class NPCGroup : MonoBehaviour
 
                 Material[] materials = meshRenderer.materials;
 
-                //Debug.Log(customPart.name + materials[0].name);
-
                 int rand = Random.Range(0, materials.Length);
 
-                //Debug.Log(customPart.name + rand);
-
                 Material chosenMat = materials[rand];
-
-                //Debug.Log(chosenMat.name);
 
                 Material[] cachedMaterials = new Material[materials.Length];
 
@@ -402,26 +342,6 @@ public class NPCGroup : MonoBehaviour
                 }
 
                 meshRenderer.materials = cachedMaterials;
-
-
-                /*for (int i=0; i<materials.Length - 1; i++)
-                {
-                    //Debug.Log(chosenMat.name);
-
-
-
-                    
-                   
-
-                    Debug.Log("Before: " + materials[i].name);
-
-                    materials[i] = new Material(chosenMat);
-
-                    Debug.Log("After: " + materials[i].name);
-
-                        //Debug.Log(customPart.name + materials[i].name);
-                    
-                }*/
 
             }
         }
@@ -444,15 +364,6 @@ public class NPCGroup : MonoBehaviour
             }
         }
 
-        /*foreach(Transform model in this.characterModels)
-        {
-            if(model.gameObject.GetComponent<NavMeshAgent>() != this.otherMembers[0])
-            {
-
-                Debug.Log("Remove: " + model.gameObject.name);
-                model.gameObject.SetActive(false);
-            }
-        }*/
     }
 
 
@@ -484,9 +395,9 @@ public class NPCGroup : MonoBehaviour
         }
     }
 
+    // Decides the destination type based on the probabilities entered in the Inspector
     destinationType DecideDestinationType()
     {
-        //float outdoorsProb = 0.8f;
 
         destinationType destType;
 
@@ -515,7 +426,6 @@ public class NPCGroup : MonoBehaviour
     {
         npc.GetComponent<NPCAI>().destination_point = formationPositions[1];
         npc.speed = 1.5f;
-        //npc.transform.localPosition = new Vector3(-1.19f, 0, -0.2f);
     }
 
     public void moveToRight(NavMeshAgent npc)
@@ -651,6 +561,7 @@ public class NPCGroup : MonoBehaviour
 
     }
 
+    // Remove any excess formation points so that there are only enough formation points for the group size
     public void removeExcessFormationPoints()
     {
         for (int i = groupSize - 1; i < formationPositions.Length; i++)

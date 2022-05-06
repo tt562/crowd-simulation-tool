@@ -22,10 +22,6 @@ public class NPCAI : MonoBehaviour
 
     public int otherMemberIndex;
 
-    //public LineRenderer line;
-
-
-
 
     public bool NPCInPlace = false;
 
@@ -57,8 +53,11 @@ public class NPCAI : MonoBehaviour
 
         Animator animator = this.GetComponent<Animator>();
 
+        // Play walking animation
 
         animator.SetBool("isWalking", true);
+
+        // Offset the frame the animation starts at to avoid all animations being in sync
 
         animator.SetFloat("cycleOffset", Random.Range(0.0f, 2.0f));
 
@@ -69,6 +68,8 @@ public class NPCAI : MonoBehaviour
     {
         if (this.currentState == states.Walking)
         {
+
+            // If one of the members leaves their formation point, set their destination back to their formation point and increase their speed in order for them to catch up
             
 
             if (this.NPCInPlace == false && this.gameObject != this.GetComponentInParent<NPCGroup>().groupLeader)
@@ -84,6 +85,9 @@ public class NPCAI : MonoBehaviour
                     this.agent.speed = 1.2f;
                 }
             }
+
+            // If the member is in their formation point, set their destination to be the same as the group leader
+
             else
             {
                 if (this.GetComponentInParent<NPCGroup>().destination != null)
@@ -94,6 +98,8 @@ public class NPCAI : MonoBehaviour
                 }
             }
         }
+
+        // If in the phase of walking up to the stationary point
             
         
         if(this.currentState == states.WalkToStand)
@@ -111,6 +117,7 @@ public class NPCAI : MonoBehaviour
         }
        
 
+        // If in the phase where standing still, interacting with a stationary interaction point
 
         if(this.currentState == states.Standing)
         {
@@ -119,6 +126,8 @@ public class NPCAI : MonoBehaviour
             Animator anim = this.GetComponent<Animator>();
 
             GameObject stationaryType = this.group.GetComponent<NPCGroup>().destination.transform.parent.gameObject;
+
+            // Play the relevant animation for the specific interaction point
 
             if (stationaryType.name == "WindowStop")
             {
@@ -138,11 +147,15 @@ public class NPCAI : MonoBehaviour
                 anim.SetBool("atWindow", false);
                 anim.SetBool("atBench", true);
 
+                // Offset the base of the character so they are at the right height when sat on the bench
 
                 this.GetComponent<NavMeshAgent>().baseOffset = -0.05f;
             }
 
             anim.SetBool("isWalking", false);
+
+
+            // Face the look-at point
 
             if (stationaryArea != null) {
                 foreach (Transform child in stationaryArea.transform)
@@ -179,12 +192,17 @@ public class NPCAI : MonoBehaviour
         if (other.tag == "FormationPosition" && (other.gameObject == this.closestFreeFormationPoint))
         {
 
+            // If at a stationary interaction point formation point
+
             if (group.state == NPCGroup.groupState.Stationary && this.currentState == states.WalkToStand)
             {
-                //Debug.Log("Hi");
+
                 this.currentState = states.Standing;
                 
             }
+
+            // If at a group formation point
+
             else
             {
                 this.NPCInPlace = true;
@@ -214,12 +232,10 @@ public class NPCAI : MonoBehaviour
             }
             if (group.state == NPCGroup.groupState.Stationary && this.gameObject == group.groupLeader)
             {
-                //Debug.Log(other.gameObject.name);
-                //Debug.Log(this.gameObject.name);
 
                 if (this.currentState == states.WalkToStand)
                 {
-                    //Debug.Log("Leader hit");
+
                     this.currentState = states.Standing;
                     Animator anim = this.GetComponent<Animator>();
 
@@ -249,7 +265,6 @@ public class NPCAI : MonoBehaviour
 
                 else if (this.currentState == states.Walking)
                 {
-                    //Debug.Log("Group stay stationary");
 
                     this.GetComponentInParent<NPCGroup>().stationaryMode(other.gameObject);
        
@@ -264,7 +279,6 @@ public class NPCAI : MonoBehaviour
                     {
                         if (child.tag == "FormationPosition")
                         {
-                            //Debug.Log(child.gameObject.name);
                             child.GetComponent<BoxCollider>().enabled = false;
                             child.gameObject.SetActive(false);
                         }
@@ -301,6 +315,8 @@ public class NPCAI : MonoBehaviour
 
     private void OnTriggerExit(Collider other)
     {
+        // If the formation position is left
+
         if (other.tag == "FormationPosition" && (other.gameObject == this.closestFreeFormationPoint))
         {
 
@@ -317,7 +333,6 @@ public class NPCAI : MonoBehaviour
 
         List<GameObject> nearbyFormationPoints = filterArray(formationPoints);
 
-        //int rand = Random.Range(0, nearbyFormationPoints.Count - 1);
 
         
         trans = nearbyFormationPoints[npcIndex];
@@ -330,18 +345,12 @@ public class NPCAI : MonoBehaviour
        
     }
 
+
     private GameObject getClosestStationaryPoint()
     {
 
         formationPoints = group.GetComponent<NPCGroup>().formationPositions;
 
-        //GameObject trans = null;
-        
-
-        //int rand = Random.Range(0, formationPoints.Length - 1);
-
-
-        //List<GameObject> nearbyPoints = new List<GameObject>();
 
 
         for (int i = 0; i < formationPoints.Length; i++)
@@ -355,17 +364,12 @@ public class NPCAI : MonoBehaviour
             
         }
 
-        
-
-
-        //trans = null;
 
         return null;
     }
 
     private List<GameObject> filterArray(GameObject[] array)
     {
-        //int rand = Random.Range(0, array.Length-1);
 
         List<GameObject> nearbyPoints = new List<GameObject>();
 
@@ -384,7 +388,7 @@ public class NPCAI : MonoBehaviour
 
     
 
-
+    // Rotate pedestrian to look at game object
     public void FaceTarget(GameObject target, GameObject npc, float speed)
     {
         float damping = speed;
@@ -403,12 +407,10 @@ public class NPCAI : MonoBehaviour
         AnimatorClipInfo[] currentClipInfo;
 
         
-        //Get them_Animator, which you attach to the GameObject you intend to animate.
         animator = gameObject.GetComponent<Animator>();
-        //Fetch the current Animation clip information for the base layer
+
         currentClipInfo = animator.GetCurrentAnimatorClipInfo(0);
         
-        //Access the Animation clip name
         clipName = currentClipInfo[0].clip.name;
 
         return clipName;
